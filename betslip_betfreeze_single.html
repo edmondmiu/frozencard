@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bet Slip - 8px Grid & Tight Spacing</title>
+  <style>
+    html {
+      overflow: visible;
+    }
+    body {
+      margin: 0;
+      background-color: #272A2F;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      overflow: visible;
+    }
+  
+    .bet-card {
+      background-color: #353842;
+      border-radius: 12px;
+      width: 360px;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: visible;
+      padding: 0;
+    }
+  
+    .share-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 16px;
+      color: #ccc;
+      cursor: pointer;
+    }
+  
+    .event-title {
+      font-size: 13px;
+      color: #b0b0b0;
+      margin: 20px 48px 8px 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  
+    .pot-win {
+      font-size: 14px;
+      color: #ccc;
+      margin: 0 16px 2px;
+    }
+  
+    .pot-amount {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      margin: 0 16px 6px;
+    }
+  
+    .stake-time-row,
+    .cashout-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #aaa;
+      margin: 0 16px 12px;
+    }
+  
+    .cashout-button {
+      background-color: #28a745;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+  
+    .settings-button {
+      background-color: #3a3d47;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  
+    .collapsible {
+      overflow: visible;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      max-height: 1000px;
+      padding: 0 16px 16px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      background-clip: padding-box;
+    }
+  
+    .collapsed {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  
+    .bet-id {
+      font-size: 12px;
+      color: #888;
+      padding: 8px 16px;
+    }
+  
+    .bet-id.full-border {
+      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
+      margin-left: -16px;
+      margin-right: -16px;
+    }
+  
+    .selection {
+      margin-left: -16px;
+      margin-right: -16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #444;
+      overflow: visible;
+      position: relative;
+    }
+  
+    .selection.won {
+      background: linear-gradient(to right, #245939, transparent);
+      border-left: 2px solid #28a745;
+    }
+  
+    .selection.lost {
+      background: linear-gradient(to right, #6d1f1f, transparent);
+      border-left: 2px solid #dc3545;
+    }
+  
+    .selection.voided {
+      background: none;
+    }
+  
+    .match-header {
+      font-size: 14px;
+      font-weight: bold;
+      color: #ccc;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .live-badge {
+      background-color: #e67e22;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+  
+    .selection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+  
+    .selection-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+  
+    .selection-name::before {
+      content: "\26BD ";
+      font-size: 14px;
+      margin-right: 2px;
+    }
+  
+    .quote-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  
+    .quote-box {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+    }
+  
+    .quote-up { background-color: #2e7d32; }
+    .quote-down { background-color: #c62828; }
+    .quote-flat { background-color: #444; }
+  
+    .status-tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  
+    .status-won { background-color: #28a745; color: #fff; }
+    .status-lost { background-color: #dc3545; color: #fff; }
+    .status-voided { background-color: #888; color: #fff; }
+    .status-cashout { background-color: #17a2b8; color: #fff; }
+  
+    .market, .league {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 2px;
+    }
+  
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+  
+    .reload-footer {
+      text-align: center;
+      padding-top: 8px;
+    }
+  
+    .reload-btn {
+      width: 100%;
+      height: 50px;
+      background-color: #535768;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  
+    .toggle-footer {
+      cursor: pointer;
+      height: 30px;
+      padding: 0 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #aaa;
+      border-top: 1px solid #444;
+      background-color: #424654;
+      gap: 6px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      transition: border-radius 0.3s ease;
+    }
+  
+    .toggle-footer .left {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+  
+    .toggle-footer .left span:first-child {
+      font-weight: 500;
+      color: #fff;
+    }
+  
+    .toggle-footer .separator {
+      color: #888;
+    }
+  
+    .toggle-footer .right {
+      font-weight: normal;
+      color: #bbb;
+    }
+  
+    .toggle-icon {
+      font-size: 14px;
+      color: #ccc;
+      transition: transform 0.3s ease;
+    }
+  
+    .freeze-toggle-button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  
+    .freeze-selection-button {
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+  
+    .frozen {
+      position: relative;
+      background-image: url('https://raw.githubusercontent.com/edmondmiu/frozencard/refs/heads/main/frostbg.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: 0;
+    }
+  
+    .selection.frozen .ice-tl,
+    .selection.frozen .ice-tr,
+    .selection.frozen .ice-bl,
+    .selection.frozen .ice-br {
+      position: absolute;
+      z-index: 10;
+      pointer-events: none;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+  
+    .selection.frozen .ice-tl {
+      width: 162px;
+      height: 82px;
+      top: -8px;
+      left: -4px;
+      background-image: url('https://raw.githubusercontent.com/edmondmiu/frozencard/refs/heads/main/tlt.png');
+    }
+  
+    .selection.frozen .ice-tr {
+      width: 82px;
+      height: 64px;
+      top: -4px;
+      right: -4px;
+      background-image: url('https://raw.githubusercontent.com/edmondmiu/frozencard/refs/heads/main/trt.png');
+    }
+  
+    .selection.frozen .ice-bl {
+  width: 82px;
+  height: 82px;
+  bottom: -4px;
+  left: -4px;
+  background-image: url('https://raw.githubusercontent.com/edmondmiu/frozencard/refs/heads/main/bleft.png'); /* match top-left */
+}
+
+.selection.frozen .ice-br {
+    width: 156px;
+    height: 82px;
+  bottom: -4px;
+  right: -4px;
+  background-image: url('https://raw.githubusercontent.com/edmondmiu/frozencard/refs/heads/main/bright.png'); /* match top-right */
+}
+
+  </style>
+  
+    
+</head>
+<body>
+  <div class="bet-card">
+    <div class="share-icon" title="Share">🔗</div>
+    <div class="event-title">Asteras Tripolis - PAOK, Man City - Real Madrid, Barcelona - Atletico Madrid, Fiorentina - AC Milan, Napoli - Roma</div>
+  <div class="pot-win">Potential Win</div>
+  <div class="pot-amount">₦1,123,800.00</div>
+  <div class="stake-time-row">
+    <div>Stake: 100.00</div>
+    <div>Odds: 16.33</div>
+  </div>
+  <div class="cashout-row">
+    <button class="cashout-button">CASH OUT ₦3,800.00</button>
+    <button class="settings-button" title="Settings">⚙️</button>
+  </div>
+
+  <div class="collapsible" id="collapsibleContent">
+    <div class="bet-id full-border">BET ID: B9TP2143318118R-1206658</div>
+
+    <!-- Open -->
+    <div class="selection">
+      <div class="match-header"><span>Asteras Tripolis - PAOK</span></div>
+      <div class="selection-header">
+        <div class="selection-name">PAOK</div>
+        <div class="quote-status">
+          <div class="quote-box quote-flat">1.25</div>
+        </div>
+      </div>
+      <div class="market">1X2</div>
+      <div class="meta-row">
+        <div class="league">Super League 1</div>
+        <div class="date">27 Oct 2021</div>
+      </div>
+    </div>
+
+    <!-- Live -->
+    <div class="selection">
+      <div class="match-header">
+        <span>Napoli - Roma</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="live-badge">LIVE</span>
+          <span style="font-size: 12px; color: #ccc;">63’</span>
+          <span style="font-size: 13px; color: #fff; font-weight: bold;">1 - 2</span>
+        </div>
+      </div>
+      <div class="selection-header">
+        <div class="selection-name">Napoli</div>
+        <div class="quote-status">
+          <div class="quote-box quote-up">1.95</div>
+        </div>
+      </div>
+      <div class="market">1X2</div>
+      <div class="meta-row">
+        <div class="league">Serie A</div>
+        <div class="date">27 Oct 2021</div>
+      </div>
+    </div>
+
+          <!-- Freeze Mode Toggle -->
+          <div style="padding: 0 16px 16px;">
+            <button class="freeze-toggle-button" onclick="toggleFreezeMode()">Enable Freeze Mode</button>
+          </div>
+
+    <div class="reload-footer">
+      <button class="reload-btn">RELOAD OPEN SELECTIONS</button>
+    </div>
+  </div>
+
+  <div class="toggle-footer" onclick="toggleCard()">
+    <div class="left">
+      <span>27 Oct 2021 17:52</span>
+      <span class="separator">|</span>
+      <span class="right">MULTIPLE (5)</span>
+    </div>
+    <span class="toggle-icon" id="toggleIcon">⬆️</span>
+  </div>
+</div>
+
+<script>
+    const collapsible = document.getElementById('collapsibleContent');
+    const toggleIcon = document.getElementById('toggleIcon');
+    let isCollapsed = false;
+  
+    function toggleCard() {
+      isCollapsed = !isCollapsed;
+  
+      if (isCollapsed) {
+        // Start collapse
+        collapsible.style.maxHeight = collapsible.scrollHeight + 'px'; // set full height first
+        collapsible.offsetHeight; // force repaint
+        collapsible.style.maxHeight = '0px';
+        collapsible.style.paddingTop = '0';
+        collapsible.style.paddingBottom = '0';
+        collapsible.style.overflow = 'hidden';
+        toggleIcon.textContent = '⬇️';
+      } else {
+        // Start expand (prep styles before visual change)
+        collapsible.classList.remove('collapsed');
+        collapsible.style.maxHeight = '0px';
+        collapsible.style.overflow = 'hidden';
+        collapsible.style.display = 'block';
+  
+        // Trigger expansion after paint
+        requestAnimationFrame(() => {
+          collapsible.style.maxHeight = collapsible.scrollHeight + 'px';
+          collapsible.style.paddingTop = '';
+          collapsible.style.paddingBottom = '';
+          toggleIcon.textContent = '⬆️';
+        });
+      }
+  
+      // Reset styles after transition ends
+      setTimeout(() => {
+        if (isCollapsed) {
+          collapsible.classList.add('collapsed');
+        } else {
+          collapsible.style.maxHeight = '';
+          collapsible.style.overflow = 'visible';
+        }
+      }, 400); // match CSS transition duration
+    }
+  
+    // Freeze Feature Logic
+    let freezeMode = false;
+  
+    function toggleFreezeMode() {
+      freezeMode = !freezeMode;
+      const button = document.querySelector('.freeze-toggle-button');
+      button.textContent = freezeMode ? 'Disable Freeze Mode' : 'Enable Freeze Mode';
+  
+      document.querySelectorAll('.selection').forEach(sel => {
+        const alreadyFrozen = sel.classList.contains('frozen');
+        let freezeBtn = sel.querySelector('.freeze-selection-button');
+  
+        if (freezeMode) {
+          if (!freezeBtn) {
+            freezeBtn = document.createElement('button');
+            freezeBtn.className = 'freeze-selection-button';
+            freezeBtn.textContent = alreadyFrozen ? 'Unfreeze' : 'Freeze';
+            freezeBtn.onclick = () => {
+              const isFrozen = sel.classList.toggle('frozen');
+              freezeBtn.textContent = isFrozen ? 'Unfreeze' : 'Freeze';
+  
+              if (isFrozen) {
+                triggerFreezeEffect(sel);
+              } else {
+                // Clean up corners
+                sel.querySelectorAll('.ice-corner').forEach(el => el.remove());
+              }
+            };
+            sel.appendChild(freezeBtn);
+          }
+        } else {
+          if (freezeBtn) {
+            sel.removeChild(freezeBtn);
+          }
+        }
+      });
+    }
+  
+    function triggerFreezeEffect(container) {
+      container.style.position = 'relative';
+  
+      // Add corner overlays
+      ['ice-tl', 'ice-tr', 'ice-bl', 'ice-br'].forEach(className => {
+        const corner = document.createElement('div');
+        corner.className = `ice-corner ${className}`;
+        container.appendChild(corner);
+      });
+    }
+  </script>
+  
+</body>
+</html>
